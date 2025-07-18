@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-giropops
+  labels:
+    type: pod
+    env: development
+spec:
+  containers:
+  - name: ubuntu 
+    image: ubuntu:22.04
+    args:
+      - sleep
+      - "infinity" # tempo em segundos que o container irá dormir | infinitamente
+    resources: # recursos que estão sendo utilizados pelo container
+      requests: # recursos garantidos ao container
+        memory: "64Mi"
+        cpu: "0.3"
+      limits: # limites máximo de recursos que o container pode utilizar
+        memory: "128Mi"
+        cpu: "0.5"
