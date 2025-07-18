@@ -15,6 +15,7 @@ spec:
     - containerPort: 80
   - name: alpine
     image: alpine:latest
-    args:
-    - sleep
-    - "1800"
+    command: ["/bin/sh"] # Use /bin/sh as the entrypoint
+    args: ["-c", "while true; do /bin/sh; done"] # Keep the container running
+    stdin: true # Keep stdin open
+    tty: true # Allocate a TTY
