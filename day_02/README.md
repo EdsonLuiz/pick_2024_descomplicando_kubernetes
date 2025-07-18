@@ -220,3 +220,42 @@ spec:
 [128M | 1G] Megabytes | Gigabytes - o Docker utiliza o sistema de unidades decimais, e não o sistema de médidas decimais. Ao usar o `Docker` utilize [M | G]. Ao usar o `Kubernetes` utilize [Mi | Gi]
 
 **CPU**: 0.5, significa utilização de 50% de uma CPU, 1 significa a utilização de toda uma CPU. O valor `m` significa millicpu (igual a 1/1000 de uma CPU)
+
+### Adicionando um volume EmptyDir no Pod
+
+**EmptyDir** é um volume que é criado no momento que o **Pod** é criado, ele é destruído junto com o **Pod**.
+Um caso de uso é o compartilhamento temporário de dados entre containers no mesmo **Pod**.
+
+```yaml
+# pod-emptydir.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-giropops
+  labels:
+    type: pod
+    app: giropops
+    run: giropops
+    env: development
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu:22.04
+    args:
+    - sleep
+    - "infinity"
+    volumeMounts:
+    - name: primeiro-emptydir
+      mountPath: /giropops
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+  volumes:
+  - name: primeiro-emptydir
+    emptyDir:
+      sizeLimit: "128Mi"
+```
