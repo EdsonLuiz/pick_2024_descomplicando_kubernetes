@@ -189,3 +189,34 @@ kubectl exec <pod_name> -c <container_name> -ti -- sh
 
 Aqui o `-ti` é utilizado para que crie um processo com interatividade pelo terminal, tendo o comportamento do comando `attach`, mas neste caso foi criado um processo que não existia na criação do container. Isto torna possível a conexão com container que não tenham o `bash / sh` no seu `PID 1`. Agora é possível utilizar `ctrl + d` para sair do container sem ficar preso no processo principal.
 
+### Criando um container com limites de memória e CPU
+
+```yaml
+# pod-limitado.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-giropops
+  labels:
+    type: pod
+    env: development
+spec:
+  containers:
+  - name: ubuntu 
+    image: ubuntu:22.04
+    args:
+      - sleep
+      - "infinity" # tempo em segundos que o container irá dormir | infinitamente
+    resources: # recursos que estão sendo utilizados pelo container
+      requests: # recursos garantidos ao container
+        memory: "64Mi"
+        cpu: "0.3"
+      limits: # limites máximo de recursos que o container pode utilizar
+        memory: "128Mi"
+        cpu: "0.5"
+```
+
+**Memory**: [128Mi | 1Gi] Mebibytes | Gibibytes - utilizado para definir o limite de memória, pois o Kubernetes utiliza o sistema de únidades binárias, e não o sistema de únidades decimais.
+[128M | 1G] Megabytes | Gigabytes - o Docker utiliza o sistema de unidades decimais, e não o sistema de médidas decimais. Ao usar o `Docker` utilize [M | G]. Ao usar o `Kubernetes` utilize [Mi | Gi]
+
+**CPU**: 0.5, significa utilização de 50% de uma CPU, 1 significa a utilização de toda uma CPU. O valor `m` significa millicpu (igual a 1/1000 de uma CPU)
